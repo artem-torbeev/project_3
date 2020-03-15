@@ -2,9 +2,53 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Admin page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        table {
+            width: 600px; /* Ширина таблицы */
+            border: 4px double black; /* Рамка вокруг таблицы */
+            border-collapse: collapse; /* Отображать только одинарные линии */
+        }
+
+        th, td {
+            text-align: left; /* Выравнивание по левому краю */
+            padding: 5px; /* Поля вокруг содержимого ячеек */
+            border: 1px solid black; /* Граница вокруг ячеек */
+        }
+    </style>
 </head>
 <body>
-<p th:text="'Hello, ' + ${name} + '!'" />
+<div align="center">
+    <h1>List Users</h1>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="users : ${listUser}">
+
+            <td th:text="${users.getUsername()}"></td>
+            <td th:text="${users.getEmail()}"></td>
+            <td th:each="role : ${users.getRole()}" th:text="${role.getRole()}"></td>
+
+            <td>
+                <a th:href="@{/admin/edit/{id}(id=${users.getId()})}">Edit</a>
+                <a th:href="@{/admin/delete/{id}(id=${users.getId()})}">Delete</a>
+            </td>
+        </tr>
+    </table>
+
+    <p><a href="/admin/create">Add a new user</a></p>
+
+    <div>
+        <p th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</p>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </div>
+</div>
 </body>
 </html>

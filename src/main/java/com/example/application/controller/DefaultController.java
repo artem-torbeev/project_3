@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class DefaultController {
 
     @GetMapping("/user")
-    public String showPageUser(){
+    public String showPageUser() {
         return "user";
     }
+
 }
