@@ -1,16 +1,18 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
 <head>
     <title>User page</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 
-<div>
-    <h3 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h3>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Sign Out"/>
-    </form>
+<p>User page</p>
+
+<div th:if="${#httpServletRequest.remoteUser != null}">
+    <p th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</p>
+    <a th:href="@{/logout}">Logout</a>
 </div>
+
 </body>
 </html>

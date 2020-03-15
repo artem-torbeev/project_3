@@ -1,6 +1,6 @@
 package com.example.application.model;
 
-//import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -8,8 +8,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "role")
-//public class Role implements GrantedAuthority {
-public class Role {
+public class Role implements GrantedAuthority {
+
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,8 +38,8 @@ public class Role {
     @ManyToMany(mappedBy = "role")
     private Set<User> owner = new HashSet<>();
 
-    //    @Override
-//    public String getAuthority() {
-//        return role;
-//    }
+        @Override
+    public String getAuthority() {
+        return role;
+    }
 }

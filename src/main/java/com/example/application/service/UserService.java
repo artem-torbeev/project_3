@@ -5,8 +5,8 @@ import com.example.application.model.User;
 import com.example.application.repository.RoleRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-//    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -45,9 +45,9 @@ public class UserService {
 
     public void addUser(User user) {
         Role role = roleRepository.findRoleById(1L)
-                .orElseThrow(()-> new IllegalArgumentException("Invalid role"));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
         user.getRole().add(role);
-        //        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -56,8 +56,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         oldUser.setUsername(newUser.getUsername());
         oldUser.setEmail(newUser.getEmail());
-        oldUser.setPassword(newUser.getPassword());
-        //        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(oldUser);
     }
 }

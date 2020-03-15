@@ -45,9 +45,7 @@
 
     <div>
         <p th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</p>
-        <form th:action="@{/logout}" method="post">
-            <input type="submit" value="Sign Out"/>
-        </form>
+        <a th:href="@{/logout}">Logout</a>
     </div>
 </div>
 </body>
