@@ -21,7 +21,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public WebSecurityConfig(CustomerUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-
     }
 
     @Bean

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserService implements CustomService<User> {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -24,25 +24,30 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
+    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Override
     public User findUserById(Long id) {
         return userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
     }
 
+    @Override
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
+    @Override
     public void deleteUserById(Long id) {
         User user = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
     }
 
+    @Override
     public void addUser(User user) {
         Role role = roleRepository.findRoleById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
@@ -51,6 +56,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Override
     public void updateUserById(Long id, User newUser) {
         User oldUser = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
