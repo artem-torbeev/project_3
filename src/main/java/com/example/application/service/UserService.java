@@ -1,5 +1,6 @@
 package com.example.application.service;
 
+import com.example.application.model.FormUser;
 import com.example.application.model.Role;
 import com.example.application.model.User;
 import com.example.application.repository.RoleRepository;
@@ -16,6 +17,7 @@ public class UserService implements CustomService<User> {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
@@ -36,8 +38,8 @@ public class UserService implements CustomService<User> {
     }
 
     @Override
-    public User findUserByUsername(String username) {
-        return userRepository.findUserByUsername(username);
+    public User findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
@@ -64,5 +66,27 @@ public class UserService implements CustomService<User> {
         oldUser.setEmail(newUser.getEmail());
         oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         userRepository.save(oldUser);
+    }
+
+    public void saveUser(FormUser formUser) {
+        Long id;
+        User user;
+        if (formUser.getId() == null) {
+            user = new User();
+        } else {
+            user = findUserById(formUser.getId());
+        }
+        user.setEmail(formUser.getEmail());
+        user.setUsername(formUser.getUsername());
+        user.setPassword(passwordEncoder.encode(formUser.getPassword()));
+        if (formUser.getRole().equals("ROLE_ADMIN")) {
+            id = 2L;
+        } else {
+            id = 1L;
+        }
+        Role role = roleRepository.findRoleById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
+        user.getRole().add(role);
+        userRepository.save(user);
     }
 }

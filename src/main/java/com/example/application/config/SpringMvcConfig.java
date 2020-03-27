@@ -12,4 +12,5 @@ public class SpringMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/access_denied").setViewName("/access_denied");
     }
+
 }

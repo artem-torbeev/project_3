@@ -23,8 +23,8 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
     @ManyToMany(fetch = FetchType.LAZY,
-                cascade = {CascadeType.PERSIST,
-                            CascadeType.MERGE})
+            cascade = {CascadeType.PERSIST,
+                    CascadeType.MERGE})
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "owner_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
@@ -33,14 +33,21 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User (String username, String email){
+    public User(String username, String email) {
         this.username = username;
         this.email = email;
     }
 
-    public User (String username, String email, String password){
-        this.username = username;
+    public User(String email, String username, String password) {
         this.email = email;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(Long id, String email, String username, String password) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
         this.password = password;
     }
 

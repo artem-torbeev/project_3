@@ -11,8 +11,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     List<User> findAll();
 
-    @Query("from User u join fetch u.role where u.username = :username")
-    User findUserByUsername(String username);
+    @Query("from User u join fetch u.role where u.email = :email")
+    User findUserByEmail(String email);
 
     Optional<User> findUserById(Long id);
 

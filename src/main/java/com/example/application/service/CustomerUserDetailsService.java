@@ -19,7 +19,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserDetails userDetails = userService.findUserByUsername(s);
+        UserDetails userDetails = userService.findUserByEmail(s);
         if (userDetails == null){
             throw new UsernameNotFoundException("Not found user");
         }

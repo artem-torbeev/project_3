@@ -8,7 +8,7 @@ public interface CustomService<T> {
 
     T findUserById(Long id);
 
-    T findUserByUsername(String username);
+    T findUserByEmail(String email);
 
     void deleteUserById(Long id);
 
