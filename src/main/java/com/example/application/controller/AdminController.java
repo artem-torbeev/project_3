@@ -1,40 +1,55 @@
 package com.example.application.controller;
 
 import com.example.application.model.FormUser;
-import com.example.application.model.Role;
 import com.example.application.model.User;
-import com.example.application.repository.RoleRepository;
 import com.example.application.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping(value = "/admin", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminController {
 
     private final UserService userService;
 
-    @Autowired
+    @Autowired()
     public AdminController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/admin")
-    public String showAllUser(ModelMap model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("listUser", users);
-        model.addAttribute("form", new FormUser());
-        return "admin";
+    @GetMapping
+    public ResponseEntity<List<User>> showAllUser() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping({"admin/create", "/admin/edit"})
-    public String createUser(@ModelAttribute("form") FormUser formUser) {
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createUser(@RequestBody FormUser formUser) {
         userService.saveUser(formUser);
-        return "redirect:/admin";
     }
 
+    @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void editUser(@RequestBody User user) {
+        Long id = user.getId();
+        userService.updateUserById(id, user);
+    }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUser(@PathVariable Long id) {
+        return userService.findUserById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+    }
 }
+

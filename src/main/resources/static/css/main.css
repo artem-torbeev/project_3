@@ -72,6 +72,10 @@ body {
     background-color: #eeecec;
 }
 
+.tab-content{
+    background-color:white;
+}
+
 
 .text-table {
     background-color: #eeecec;
@@ -99,4 +103,12 @@ body {
     margin-right: -15px;
     padding-right: 45px;
     padding-left: 45px;
+}
+
+.form-container-add{
+    text-align: center;
+}
+
+.modal-footer{
+    border-top-width: 0px;
 }

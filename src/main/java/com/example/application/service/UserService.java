@@ -6,8 +6,8 @@ import com.example.application.model.User;
 import com.example.application.repository.RoleRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class UserService implements CustomService<User> {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -54,7 +54,8 @@ public class UserService implements CustomService<User> {
         Role role = roleRepository.findRoleById(1L)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
         user.getRole().add(role);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         userRepository.save(user);
     }
 
@@ -64,7 +65,12 @@ public class UserService implements CustomService<User> {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         oldUser.setUsername(newUser.getUsername());
         oldUser.setEmail(newUser.getEmail());
-        oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+//        oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        oldUser.setPassword(newUser.getPassword());
+        Role role = roleRepository.findRoleById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
+        oldUser.getRole().add(role);
+
         userRepository.save(oldUser);
     }
 
@@ -78,7 +84,8 @@ public class UserService implements CustomService<User> {
         }
         user.setEmail(formUser.getEmail());
         user.setUsername(formUser.getUsername());
-        user.setPassword(passwordEncoder.encode(formUser.getPassword()));
+//        user.setPassword(passwordEncoder.encode(formUser.getPassword()));
+        user.setPassword(formUser.getPassword());
         if (formUser.getRole().equals("ROLE_ADMIN")) {
             id = 2L;
         } else {

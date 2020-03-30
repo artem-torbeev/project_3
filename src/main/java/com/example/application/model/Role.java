@@ -38,7 +38,7 @@ public class Role implements GrantedAuthority {
     @ManyToMany(mappedBy = "role")
     private Set<User> owner = new HashSet<>();
 
-        @Override
+    @Override
     public String getAuthority() {
         return role;
     }
