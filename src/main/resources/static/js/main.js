@@ -1,72 +1,99 @@
-$(document).ready(function ($) {
+jQuery(document).ready(function ($) {
 
-    $.ajax({
-        type: 'GET',
-        url: "http://localhost:8080/admin",
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        cache: false,
-        async: false,
-        success: function (data) {
-            $.each(data, function (key, value) {
-                data += '<tr>';
-                data += '<td>' + value.id+'</td>';
-                data += '<td>' + value.role.map(role=>role.role)+'</td>';
-                data += '<td>' + value.username+'</td>';
-                data += '<td>' + value.password+'</td>';
-                data += '<td>' + value.email+'</td>';
-                data += '<td><button type="button" class="btn btn-primary"data-toggle="modal" data-target="#myModal"> Edit </button></td>';
-                data += '<tr>';
-            });
-            $('#table-user .userList').append(data);
-            console.log("Success: ", data);
-            // setTimeout(() => alert('Прием...'), 1000);
-        }
+    //заполнение таблицы
+    function ajaxGet() {
+        $.ajax({
+            type: "GET",
+            url: "/admin/all",
+            cache: false,
+            success: function (result) {
 
-    });
+                var tr = [];
+                for (var i = 0; i < result.length; i++) {
+                    tr.push('<tr>');
+                    tr.push('<td>' + result[i].id + '</td>');
+                    tr.push('<td>' + result[i].role.map(role => role.role) + '</td>');
+                    tr.push('<td>' + result[i].username + '</td>');
+                    tr.push('<td>' + result[i].password + '</td>');
+                    tr.push('<td>' + result[i].email + '</td>');
+                    tr.push('<td><button data-id=' + result[i].id + ' type="button" class="btn btn-primary" data-toggle="modal"  ' +
+                        'data-target="#editModal">Edit</button></td>');
+                    tr.push('</tr>');
+                }
+                //заменит содержимое тэга
+                $("#table-user .userList").html($(tr.join('')));
+            },
 
+        });
+    }
 
-    $("#addBtn").click(function (e) {
+    ajaxGet();
+
+    //добавления User
+    jQuery("#addBtn").click(function (e) {
 
         e.preventDefault();
 
         var user = {
             "email": $("#addEmail").val(),
-            "login": $("#addLogin").val(),
+            "username": $("#addLogin").val(),
             "password": $("#addPassword").val(),
             "role": $("#addRole").val()
         };
         $.ajax({
             type: 'POST',
-            url: "http://localhost:8080/admin/create",
+            url: "/admin/create",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(user),
             dataType: 'json'
         });
         // setTimeout(() => alert('ОТправка...'), 1000);
         $("#creat")[0].reset();
+
+        setTimeout(() => ajaxGet(), 1000);
     });
 
-    $("#editBtn").click(function (e) {
+    //изменения user
+    jQuery("#editBtn").click(function (e) {
 
         e.preventDefault();
 
         var user = {
             "id": $("#editId").val(),
             "email": $("#editEmail").val(),
-            "login": $("#editLogin").val(),
+            "username": $("#editLogin").val(),
             "password": $("#editPassword").val(),
             "role": $("#editRole").val()
         };
         $.ajax({
-            type: 'POST',
-            url: "http://localhost:8080/admin/edit",
+            type: 'PUT',
+            url: "/admin/edit",
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(user),
             dataType: 'json'
         });
-        // setTimeout(() => alert('ОТправка...'), 1000);
-        $("#creat")[0].reset();
-    });
-});
 
+        $("#edit")[0].reset();
+
+        setTimeout(() => ajaxGet(), 1000);
+    });
+
+     //заполнения модального окна
+    jQuery('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        // console.log(id);
+        $.ajax({
+            type: 'GET',
+            url: '/admin/' + id,
+            success: function (data) {
+                $('#editModal #editId').val(data.id);
+                $('#editModal #editEmail').val(data.email);
+                $('#editModal #editLogin').val(data.username);
+                $('#editModal #editPassword').val(data.password);
+                $('#editModal #editRole').val(data.role.map(role => role.role));
+            }
+        })
+    });
+
+});

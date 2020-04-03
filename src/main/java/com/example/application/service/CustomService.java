@@ -12,8 +12,4 @@ public interface CustomService<T> {
 
     void deleteUserById(Long id);
 
-    void addUser(T user);
-
-    void updateUserById(Long id, T user);
-
 }

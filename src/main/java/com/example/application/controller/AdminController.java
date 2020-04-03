@@ -22,20 +22,20 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping(value="/all")
     public ResponseEntity<List<User>> showAllUser() {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createUser(@RequestBody FormUser formUser) {
-        userService.saveUser(formUser);
+    public void createUser(@RequestBody FormUser user) {
+        userService.addUser(user);
     }
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void editUser(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.OK)
+    public void editUser(@RequestBody FormUser user) {
         Long id = user.getId();
         userService.updateUserById(id, user);
     }

@@ -6,8 +6,8 @@ import com.example.application.model.User;
 import com.example.application.repository.RoleRepository;
 import com.example.application.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class UserService implements CustomService<User> {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-//    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -49,51 +49,34 @@ public class UserService implements CustomService<User> {
         userRepository.delete(user);
     }
 
-    @Override
-    public void addUser(User user) {
-        Role role = roleRepository.findRoleById(1L)
+
+    public void addUser(FormUser user) {
+        Long idRole;
+        User newUser = new User();
+        newUser.setUsername(user.getUsername());
+        newUser.setEmail(user.getEmail());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+//        newUser.setPassword(user.getPassword());
+
+        if (user.getRole().equals("ROLE_ADMIN")) {
+            idRole = 2L;
+        } else {
+            idRole = 1L;
+        }
+        Role role = roleRepository.findRoleById(idRole)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
-        user.getRole().add(role);
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setPassword(user.getPassword());
-        userRepository.save(user);
+        newUser.getRole().add(role);
+        userRepository.save(newUser);
     }
 
-    @Override
-    public void updateUserById(Long id, User newUser) {
+    public void updateUserById(Long id, FormUser user) {
         User oldUser = userRepository.findUserById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        oldUser.setUsername(newUser.getUsername());
-        oldUser.setEmail(newUser.getEmail());
-//        oldUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        oldUser.setPassword(newUser.getPassword());
-        Role role = roleRepository.findRoleById(1L)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
-        oldUser.getRole().add(role);
-
+        oldUser.setUsername(user.getUsername());
+        oldUser.setEmail(user.getEmail());
+        oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
+//        oldUser.setPassword(user.getPassword());
         userRepository.save(oldUser);
     }
 
-    public void saveUser(FormUser formUser) {
-        Long id;
-        User user;
-        if (formUser.getId() == null) {
-            user = new User();
-        } else {
-            user = findUserById(formUser.getId());
-        }
-        user.setEmail(formUser.getEmail());
-        user.setUsername(formUser.getUsername());
-//        user.setPassword(passwordEncoder.encode(formUser.getPassword()));
-        user.setPassword(formUser.getPassword());
-        if (formUser.getRole().equals("ROLE_ADMIN")) {
-            id = 2L;
-        } else {
-            id = 1L;
-        }
-        Role role = roleRepository.findRoleById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid role"));
-        user.getRole().add(role);
-        userRepository.save(user);
-    }
 }
