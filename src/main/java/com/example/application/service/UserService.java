@@ -56,7 +56,6 @@ public class UserService implements CustomService<User> {
         newUser.setUsername(user.getUsername());
         newUser.setEmail(user.getEmail());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//        newUser.setPassword(user.getPassword());
 
         if (user.getRole().equals("ROLE_ADMIN")) {
             idRole = 2L;
@@ -74,8 +73,6 @@ public class UserService implements CustomService<User> {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         oldUser.setUsername(user.getUsername());
         oldUser.setEmail(user.getEmail());
-        oldUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//        oldUser.setPassword(user.getPassword());
         userRepository.save(oldUser);
     }
 

@@ -43,20 +43,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/", "/user").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN");
-        http.formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .successHandler(authSuccessHandler())
-                .and()
-                .exceptionHandling().accessDeniedPage("/access_denied");
-        http.logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+//        http.authorizeRequests()
+//                .antMatchers("/", "/user").permitAll()
+//                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN");
+//        http.formLogin()
+//                .loginPage("/login")
+//                .loginProcessingUrl("/login")
+//                .successHandler(authSuccessHandler())
+//                .and()
+//                .exceptionHandling().accessDeniedPage("/access_denied");
+//        http.logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/")
+//                .invalidateHttpSession(true)
+//                .deleteCookies("JSESSIONID");
         http.csrf().disable();
     }
 

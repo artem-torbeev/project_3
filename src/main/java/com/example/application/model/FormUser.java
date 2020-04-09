@@ -26,6 +26,13 @@ public class FormUser{
         this.role = role;
     }
 
+    public FormUser(Long id, String email, String username,String role) {
+        this.id = id;
+        this.email = email;
+        this.username = username;
+        this.role = role;
+    }
+
     public Long getId() {
         return id;
     }
